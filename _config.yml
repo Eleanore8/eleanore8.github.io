@@ -1,1 +1,15 @@
-theme: jekyll-theme-cayman
+# Setup
+title:        zt blog
+baseurl:      ""
+
+# About/contact
+author:
+  name:       zt
+  url:        https://eleanore8.github.io/
+
+# Gems
+gems:
+  - jekyll-paginate
+
+#Others
+markdown: kramdown
