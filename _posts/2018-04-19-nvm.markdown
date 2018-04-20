@@ -1,0 +1,96 @@
+---
+layout: default
+title:  "使用nvm管理不同版本的node与npm"
+date:   2018-04-19 17:50:00
+des:  "No Zuo No Die, Why I Try !"
+motto:  "上联：Google把简单的事情复杂化，下联：百度复杂的问题没有答案，横批：一切都是瞎折腾"
+categories: main
+---
+
+平时的开发中，应该是不会遇到需要不同版本npm的情况吧。
+然而当前卫的angular5和保守派的cordova搭档的时候，emmmm，可怜的cordova升级失败了，然后全局的cordova就。。。就。。。就木有了 - 。 -
+
+## nvm与n的区别
+
+node 版本管理工具还有一个是 TJ大神的 n 命令，n 命令是作为一个 node 的模块而存在，而 nvm 是一个独立于 node/npm 的外部 shell 脚本，因此 n 命令相比 nvm 更加局限。
+
+这里我选择的是使用nvm，Mac系统
+
+### 一、卸载全局的 node/npm
+##### 1.官网下载pkg安装包的
+
+    sudo rm -rf /usr/local/{bin/{node,npm},lib/node_modules/npm,lib/node,share/man/*/node.*}
+
+##### 2.homebrew安装的
+    brew uninstall node
+
+##### 3.其他方式安装的
+
+弄一个脚本，把需要删除的文件通通去掉，命名为：uninstallnode.sh
+
+{% highlight ruby %}
+#!/bin/bash
+lsbom -f -l -s -pf /var/db/receipts/org.nodejs.pkg.bom \
+| while read i; do
+  sudo rm /usr/local/${i}
+done
+sudo rm -rf /usr/local/lib/node \
+     /usr/local/lib/node_modules \
+     /var/db/receipts/org.nodejs.*
+{% endhighlight %}
+
+修改文件权限    chmod 777 uninstallNodejs.sh
+
+### 二、安装nvm
+
+使用X-Code的命令行工具
+
+    xcode-select --install
+
+然后当你安装nvm的时候就会报这个错误，可能也只有我遇到了吧 = =
+
+ ![e]({{ site.baseurl }}/img/nvm1.jpg)
+
+哎，然后提示的命令执行一下
+
+好啦，接下来就是愉快的安装nvm啦！
+
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
+
+[官方最新安装命令]
+
+[官方最新安装命令]: https://github.com/creationix/nvm#install-script
+
+### 三、安装多版本node/npm
+
+如：安装5.0.0版本
+
+    nvm install 5.0.0
+
+安装最新版node
+
+    nvm install node
+
+通过以下命令来列出远程服务器上所有的可用版本：
+
+    nvm ls-remote
+
+[nvm命名规则]
+
+[nvm命名规则]: https://semver.org/lang/zh-CN/
+
+### 四、不同版本之间的切换
+
+切换到5.0.0
+
+    nvm use 5.0.0
+
+使用最新版
+
+    nvm use node
+
+列出你已安装的版本
+
+    nvm ls
+
+好啦，接下来就可以愉快的在不同版本之间完成你想要的东西啦，哈哈，之前angular2的项目也可以这样子完美运行起来啦
