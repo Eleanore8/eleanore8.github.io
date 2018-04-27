@@ -4,7 +4,7 @@ title:  "使用nvm管理不同版本的node与npm"
 date:   2018-04-19 17:50:00
 des:  "No Zuo No Die, Why I Try !"
 motto:  "上联：Google把简单的事情复杂化，下联：百度复杂的问题没有答案，横批：一切都是瞎折腾"
-categories: main
+categories: nvm
 ---
 
 平时的开发中，应该是不会遇到需要不同版本npm的情况吧。

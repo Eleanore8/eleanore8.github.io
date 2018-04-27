@@ -1,0 +1,141 @@
+---
+layout: default
+title:  "移动端开发之适配"
+date:   2018-04-21
+des:  "移动设备==触摸设备，Is right?"
+motto:  "世界上通常的机会只有3秒"
+categories: phone
+---
+
+人们使用手机和电脑的习惯是不同的。
+现在我们使用电脑是为了完成特定的工作，而使用手机或平板这种移动设备，往往是在空闲的空隙，如坐车、排队等。
+阅读一个网站，加载时间过长时，电脑端的用户可能会多点击几次链接或者开启其他标签浏览其他文章。
+而移动端的用户永远不会给你这种机会，他们的忍耐度就那么几秒钟。
+
+## <head>标签
+
+### HTTP-EQUIV 元信息
+
+http-equiv元信息等效于设置了HTTP报头。
+这可以向浏览器传递一些原本由服务器告诉他的信息。
+
+如设置一个缓存头：
+
+```ruby
+<meta name="Expires" content="Wed, 05 Auguest 2020 00:00:00 GMT">
+```
+
+如果IE用户安装了Chrome frame插件，则使用该插件，否则使用IE浏览器最新最好的引擎呈现：
+```ruby
+<meta name="x-ua-compatible" content="ie=edge, chrome=1">
+```
+
+### viewport
+
+属性                      | 描述
+------------------------ | ------------------------------------------------
+width                    | 设置viewport的宽度，默认980，允许的设置范围200-10000
+height                   | 设置viewport的高度，默认值是通过宽度和设备宽高比计算出来的，允许范围223-10000
+initial-scale            | 设置viewport的初始比例，默认值是通过计算使得整个页面在可写的区域内
+maximum-scale            | 设置viewport的最大比例。默认是5.0，取值范围0-10.0
+user-scalable            | 用户是否可以缩放视图，防止文本开始输入时的滚动
+
+一般这样设置：
+```ruby
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+```
+
+在iOS11和iPhone X增加了一个安全区的概念。
+可以采用viewport-fit的meta标签作为适配方案。
+
+viewport-fit             | 描述
+------------------------ | ------------------------------
+auto                     | 默认：viewprot-fit:contain;页面内容显示在safe area内
+cover                    | viewport-fit:cover,页面内容充满屏幕
+
+最终适配于iOS11及iPhone X：
+```ruby
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no,viewport-fit=cover">
+```
+
+更多viewport知识参考
+
+### 响应式css
+
+先来了解一下像素。
+
+> 1.设备像素：屏幕的物理像素，任何设备屏幕的物理像素的数量都是固定不变的，单位是pt。
+
+> 2.CSS像素：设备独立像素(device-independent pixels)，简称为dips，单位是dp。
+
+> 3.设备像素比dpr(device pixel ratio)：简称dpr，物理像素和设备独立像素的对应关系，公式：设备像素比 ＝ 物理像素 / 设备独立像素
+
+如在Retina屏的iphone上，devicePixelRatio的值为2，也就是说1个css像素相当于2个物理像素。
+
+#### 1.媒体查询
+
+如：
+```ruby
+@media (min-width: 700px) {
+    ...
+}
+```
+
+一般用于pc和移动端混合开发时
+
+#### 2.强制viewport宽度为设计稿的宽度
+
+```ruby
+// 根据设计稿的宽度来传参 比如640 750 1125
+!function(designWidth){
+    if (/Android(?:\s+|\/)(\d+\.\d+)?/.test(navigator.userAgent)) {
+		var version = parseFloat(RegExp.$1);
+		if (version > 2.3) {
+			var phoneScale = parseInt(window.screen.width) / designWidth;
+			document.write('<meta name="viewport" content="width=' + designWidth + ',minimum-scale=' + phoneScale + ',maximum-scale=' + phoneScale + ', target-densitydpi=device-dpi">');
+		} else {
+			document.write('<meta name="viewport" content="width=' + designWidth + ',target-densitydpi=device-dpi">');
+		}
+	} else {
+		document.write('<meta name="viewport" content="width=' + designWidth + ',user-scalable=no,target-densitydpi=device-dpi,minimal-ui,viewport-fit=cover">');
+	}
+}(640);
+```
+
+如在devicePixelRatio为2的设备中，1px会被显示为0.5。
+
+#### 3.综合使用
+这个的思路：使用相对单位 rem 并将设备的可视视口宽度乘以一个系数得到 html 元素的 font-size，元素布局时不超出可视视口宽度即可。
+
+先将视口尺寸作为可视视口尺寸，缩放比例定为1，就是之前这段
+```ruby
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no,viewport-fit=cover">
+```
+
+动态设置设置html元素的font-size:
+
+> 750px 是设计稿的宽度（以iphone6的物理像素数为标准），100是期望的换算比例，即设计稿中 100px 的长度对应css中 1rem，将设计稿中的长度数值除以 100 得到的就是以 rem 为单位的 css 长度的数值，设计稿的宽换算为以 rem 为单位的 css 长度应为 (750/100) rem，同时设计稿的宽对应可视视口的宽，即有 (750/100) rem = 可视视口宽，1 rem = 可视视口宽 * (100/750)，(100/750)就是我们要的系数
+
+```ruby
+document.documentElement.style.fontSize = window.innerWidth / 7.5 + 'px';
+```
+
+#### 淘宝的flexible方案
+根据dpr动态修改meta标签
+
+```ruby
+var metaEl = doc.createElement('meta');
+var scale = isRetina ? 0.5:1;
+metaEl.setAttribute('name', 'viewport');
+metaEl.setAttribute('content', 'initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+if (docEl.firstElementChild) {
+    document.documentElement.firstElementChild.appendChild(metaEl);
+} else {
+    var wrap = doc.createElement('div');
+    wrap.appendChild(metaEl);
+    documen.write(wrap.innerHTML);
+}
+```
+
+然后和上述一样，给<html>元素添加font-size属性，并且动态改写font-size的值。
+大致原理是这样的。

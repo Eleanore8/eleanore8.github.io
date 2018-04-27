@@ -8,7 +8,7 @@ author:
   url:        https://eleanore8.github.io/
 
 # Gems
-gems:
+plugins:
   - jekyll-paginate
 
 #Others
