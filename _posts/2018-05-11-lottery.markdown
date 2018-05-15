@@ -1,0 +1,14 @@
+---
+layout: default
+title:  "使用angular4写一个九宫格抽奖"
+date:   2018-05-10 14:50:00
+des:  "No Zuo No Die, Why I Try !"
+motto:  "上联：Google把简单的事情复杂化，下联：百度复杂的问题没有答案，横批：一切都是瞎折腾"
+categories: nvm
+---
+
+项目中要求写一个九宫格抽奖，简单记录一下遇到的坑而已~
+
+### 思路
+
+大致说下思路，
