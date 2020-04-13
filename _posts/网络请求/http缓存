@@ -1,0 +1,65 @@
+### 强制缓存
+
+强制缓存通常是用在图片或者logo这样长久不会更改的资源上的
+
+强制缓存主要是通过Cache-Control和Expires来设置的
+
+### 协商缓存
+
+协商缓存常见的，一种是Last-Modified，另一种是Etag
+
+### 强制不缓存
+
+设置Cache-Control: no-store
+
+### header
+
+| http header | 描述 | 强缓存 | 协商缓存
+| :-----------: | :--------------------------: | :---: | :---: |
+| Pragma | 老版本的本地缓存机制，http 1.0 及以下 |  |  |
+| Expires | 在此时候之后，响应过期，时间是绝对时间，受本地时间影响 | * |  |
+| Cache-Control | 强缓存策略 Cache-Control: public, max-age=31536000, must-revalidate max-age是相对时间 | * |  |
+|Last-Modified、If-Modified-Since | 资源最后被更改的时间，精确到秒 |  | * |
+|ETag、If-None-Match | 资源的标识值，用来唯一的标识一个资源 |  | * |
+
+处理优先级
+
+在本地 Cache-Control > Expires，Pragma 在不支持 Cache-Control 时生效。
+
+如果本地缓存过期，则要依靠协商缓存
+
+ETag > Last-Modified
+
+强缓存的 http 状态码是 200 OK
+
+协商缓存的 http 状态码是 304 Not Modified
+
+### Cache-Control
+
+1、public 表明响应可以被任何对象（包括：发送请求的客户端，代理服务器，等等）缓存。
+
+2、private 表明响应只能被单个用户缓存，不能作为共享缓存（即代理服务器不能缓存它）。私有缓存可以缓存响应内容。
+
+3、no-cache 即使有缓存也会向服务器发请求。
+
+4、no-store 让客户端不要把资源存在缓存。
+
+5、max-age=<seconds> 设置缓存存储的最大周期，超过这个时间缓存被认为过期(单位秒)。与 Expires 相反，时间是相对于请求的时间。
+
+6、s-maxage=<seconds> 覆盖 max-age 或者 Expires 头，但是仅适用于共享缓存(比如各个代理)，私有缓存会忽略
+
+####  public 和 private 的区别
+
+private 不允许代理缓存。
+
+举个例子，ISP 服务商可以在你的客户端和互联网之间加上不可见的代理，这个代理会缓存网页来降低带宽，
+客户端设置 cache-control: private 之后，可以指定 ISP 代理不允许缓存网页，但是允许最后的接受者缓存。
+而使用  cache-control: public 的意思是说，谁都可以缓存哈，所以中间代理会缓存一份以减少带宽降低费用。
+
+禁止缓存
+
+Cache-Control: no-cache, no-store, must-revalidate
+
+缓存静态资源
+
+Cache-Control:public, max-age=86400

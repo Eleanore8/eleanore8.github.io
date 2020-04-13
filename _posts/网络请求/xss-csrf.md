@@ -1,0 +1,71 @@
+### CIA
+机密性（Confidentiality）
+
+完整性（Integrity）
+
+可用性（Availability）
+
+# XSS
+
+### 知道XSS有哪几种类型吗？
+
+1、反射型 XSS (也叫非持久型)：恶意 JavaScript 脚本属于用户发送给网站请求中的一部分，随后网站又将这部分返回给用户，恶意脚本在页面中被执行。
+一般发生在前后端一体的应用中，服务端逻辑会改变最终的网页代码。
+
+![反射型](https://user-gold-cdn.xitu.io/2020/3/23/171080fa3388d36e?imageslim)
+
+基于 DOM 的 XSS：JavaScript 改变 HTML
+
+![DOM](https://user-gold-cdn.xitu.io/2020/3/23/171080fbbac923a7?imageslim)
+
+存储型 XSS (也叫持久型 XSS)：黑客将恶意 JavaScript 脚本长期保存在服务端数据库中，用户一旦访问相关页面数据，恶意脚本就会被执行。
+
+![存储型](https://user-gold-cdn.xitu.io/2020/3/23/171080fd60f96569?imageslim)
+
+### XSS(Cross-Site Scripting，跨站脚本攻击)攻击是如何产生的？
+
+黑客在你的浏览器中插入一段恶意 JavaScript 脚本，窃取你的隐私信息、冒充你的身份进行操作。
+
+### 区别
+
+反射型的 XSS 的恶意脚本存在 URL 里，存储型 XSS 的恶意代码存在数据库里。
+
+而基于DOM型的XSS 攻击中，取出和执行恶意代码由浏览器端完成，属于前端 JavaScript 自身的安全漏洞，其他两种 XSS 都属于服务端的安全漏洞。
+
+### 防护
+
+一切用户输入皆不可信，在输出时进行验证将 
+2、HTML 元素内容、属性以及 URL 请求参数、CSS 值进行编码
+3、当编码影响业务时，使用白名单规则进行检测和过滤
+4、使用 W3C 提出的 CSP (Content Security Policy，内容安全策略)，定义域名白名单
+5、设置 Cookie 的 HttpOnly 属性
+
+# CSRF
+
+Cross-site request forgery，又称为“跨站请求伪造”。
+
+黑客引诱用户打开黑客的网站，利用用户的登陆状态发起跨站请求。
+
+### 实现
+
+1、最容易实现的是 Get 请求，一般进入黑客网站后，可以通过设置 img的 src 属性来自动发起请求
+
+2、在黑客的网站中，构造隐藏表单来自动发起 Post 请求
+
+3、通过引诱链接诱惑用户点击触发请求，利用 a 标签的 href。
+
+### 防范
+
+1、针对实际情况，设置关键 Cookie 的 SameSite 属性为 Strict 或 Lax
+
+2、服务端验证请求来源站点(Referer、Origin)使用 CSRF Token，服务端随机生成返回给浏览器的 Token，每一次请求都会携带不同的 CSRF Token
+
+3、加入二次验证(独立的支付密码)
+
+## CSRF攻击和XSS攻击的区别
+
+1、CSRF 攻击不需要将恶意代码注入用户的页面，仅仅是利用服务器的漏洞和用户的登录状态来实施攻击。
+
+2、CSRF 攻击成本也比 XSS 低，用户每天都要访问大量网页，无法确认每一个网页的合法性， 从用户角度来说，无法彻底防止 CSRF 攻击。
+
+

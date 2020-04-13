@@ -3,8 +3,8 @@ layout: default
 title:  "移动端开发之适配"
 date:   2018-04-21
 des:  "移动设备==触摸设备，Is right?"
-motto:  "世界上通常的机会只有3秒"
-categories: phone
+motto:  "世界上的机会通常只有3秒"
+categories: 移动端
 ---
 
 人们使用手机和电脑的习惯是不同的。
