@@ -1,4 +1,14 @@
+---
+layout: default
+title:  "HTTP和HTTPS"
+date:   2020-04-04 17:50:00
+des:  ""
+motto:  ""
+categories: 网络请求
+---
+
 ### HTTP 与 HTTPS 的区别
+
 1. HTTP 是明文传输，运行在TCP之上；HTTPS 通过 SSL\TLS 进行了加密，SSL/TLS运行在TCP之上
 
 2. HTTP 的端口号是 80，HTTPS 是 443
@@ -37,6 +47,7 @@ HTTP1.1的请求消息和响应消息都应支持Host头域，且请求消息中
 4. 服务端推送（server push），同SPDY一样，HTTP2.0也具有server push功能。这里的服务端推送指把客户端所需要的css/js/img资源伴随着index.html一起发送到客户端，省去了客户端重复请求的步骤（从缓存中取）。
 
 ### http3
+
 使用了QUIC协议
 
 1. 避免包阻塞： 多个流的数据包在TCP连接上传输时，若一个流中的数据包传输出现问题，TCP需要等待该包重传后，才能继续传输其它流的数据包。

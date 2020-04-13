@@ -1,0 +1,40 @@
+## 数据类型（8）
+数字（number）、字符串（string）、布尔值（boolean）、undefined、null、对象（Object）、symbol、bigInt
+
+## typeof和instanceOf的区别
+
+```js
+// 原始数据类型的判断 ，    函数跟对象有特殊：typeof 如果是函数就返回函数，是对象就返回对象。不能判断具体点的
+console.log(typeof [])//object
+console.log(typeof new RegExp('/A/'));//object
+console.log(typeof function () { });//function
+console.log(typeof null);// object特殊的
+console.log(typeof 1);// number
+console.log(typeof 'ss');// string
+
+// 能判断具体的但是不能判断自定义类型的
+console.log(Object.prototype.toString.call(new RegExp('/A/')))//[object RegExp]
+class A { }
+const a = new A();
+console.log(Object.prototype.toString.call(a))//[object Object]
+
+// instanceof 就是通过__proto__能找到的,  缺点不能判断原始数据类型
+console.log([] instanceof Object); //true    [].__proto__.__proto__ === Object.prototype  因为这个为true
+console.log([] instanceof Array); //true  [].__proto__ === Array.prototype 因为这个为true
+function instanceofMy(A, B) {
+  B = B.prototype;
+  A = A.__proto__;
+  while (true) {
+    if (A === null) {
+      return false;
+    }
+    if (A === B) {
+      return true;
+    }
+    A = A.__proto__;
+  }
+}
+console.log('str' instanceof String); // false 缺点不能判断原始数据类型
+//  instance默认调用‘str’类上的 Symbol.hasInstance方法。所以我们可以复写String的这个方法，来自己实现
+// constructor 也有相应的应用场景
+```

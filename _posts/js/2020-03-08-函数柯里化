@@ -1,0 +1,82 @@
+---
+layout: default
+title:  "函数柯里化"
+date:   2020-03-08 17:50:00
+des:  ""
+motto:  ""
+categories: js
+---
+
+柯里化是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术
+
+Currying ——只传递给函数一部分参数来调用它，让它返回一个函数去处理剩下的参数。
+
+例：
+
+    function add (x, y) {
+      return (x + y)
+    }
+    
+    curriedAdd(1)(3) === 4; // true
+    
+    var increment = curriedAdd(1)
+    
+    increment(2) === 3; // true
+    
+    var addTen = curriedAdd(10)
+    
+    addTen(2) === 12; // true
+    
+
+对 curriedAdd 进行抽象，可能会得到如下函数 currying ：
+
+    function currying (fn, ...args1) {
+        return function (...args2) {
+            return fn(...args1, ...args2)
+        }
+    }
+    
+    var increment = currying(add, 1)
+    
+    increment(2) === 3; // true
+    
+    var addTen = currying(add, 10)
+    
+    addTen(2) === 12; // true
+    
+在此实现中，currying 函数的返回值其实是一个接收剩余参数并且立即返回计算值的函数。
+即它的返回值并没有自动被 Currying化 。
+所以我们可以通过递归来将 currying 的返回的函数也自动 Currying 化。
+
+    function trueCurrying(fn, ...args) {
+        if (args.length >= fn.length) {
+            return fn(...args);
+        }
+    
+        return function (...args2) {
+            return trueCurrying(fn, ...args, ...args2);
+        }
+    }
+
+
+### 性能
+
+箭头函数>bind>currying>trueCurrying
+
+![对比图](https://user-gold-cdn.xitu.io/2018/5/8/1633e3ce88971668?imageslim)
+
+### 优点
+
+1. 为了多参函数复用性
+
+2. 为函数式编程而生
+
+### 不足
+
+1. Currying 的一些特性有其他解决方案
+
+如果我们只是想提前绑定参数，那么我们有很多好几个现成的选择，bind，箭头函数等，而且性能比Curring更好。
+
+2. Currying 陷于函数式编程
+
+假如我们还没有准备好去写函数式编程规范的代码，仅需要在 JSX 代码中提前绑定一次参数，那么 bind 或箭头函数就足够了。

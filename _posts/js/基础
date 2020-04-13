@@ -1,0 +1,20 @@
+### 列出对数组产生副作用和没有副作用的方法
+
+产生副作用的方法（改变了原来的数组）：pop()、push()	、reverse()	、shift()、sort()、splice()、unshift()
+
+没有副作用的方法（原来数组不变）：concat()、join()、slice()、toString()、toLocaleString()、valueOf()
+
+### new关键字做了什么？
+
+ (1).创建一个新对象
+ 
+ (2).将构造函数的作用域赋给新对象（因此this就指向了这个新对象） 
+ 
+ (3).执行构造函数中的代码（为这个新对象添加属性、方法） 
+ 
+ (4).返回新对象
+ 
+    var obj = {}
+    obj.__proto__ = Base.prototype
+    Base.call(obj)
+
